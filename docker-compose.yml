@@ -1,0 +1,31 @@
+version: '3.8'
+
+services:
+  api:
+    build: .
+    container_name: mlops_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./mlruns:/app/mlruns
+      - ./data:/app/data
+      - ./logs.db:/app/logs.db
+      - ./reports:/app/reports
+    environment:
+      - API_VERSION=1.0.0
+      - ENVIRONMENT=production
+      - DEFAULT_THRESHOLD=0.5
+    restart: unless-stopped
+
+  dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.dashboard
+    container_name: mlops_dashboard
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./logs.db:/app/logs.db
+    depends_on:
+      - api
+    restart: unless-stopped

@@ -1,0 +1,23 @@
+{
+  "data_version": "v1.0",
+  "random_state": 42,
+  "n_features": 184,
+  "n_samples_train": 307511,
+  "n_categorical_features": 16,
+  "imputation_strategy": "median",
+  "cols_dropped_threshold": 70,
+  "n_cols_dropped": 0,
+  "feature_engineering": [
+    "CREDIT_INCOME_RATIO",
+    "ANNUITY_INCOME_RATIO",
+    "CREDIT_GOODS_RATIO",
+    "ANNUITY_CREDIT_RATIO",
+    "AGE_YEARS",
+    "EMPLOYMENT_YEARS",
+    "DEBT_RATIO",
+    "CHILDREN_RATIO",
+    "INCOME_PER_PERSON",
+    "DOCUMENTS_COUNT"
+  ],
+  "timestamp": "2026-02-26T14:29:14.772848"
+}

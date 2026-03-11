@@ -1,6 +1,6 @@
 {
-  "model_name": "LogisticRegression",
-  "model_type": "LogisticRegression",
+  "model_name": "XGBoost_optimized",
+  "model_type": "XGBClassifier",
   "stage": "baseline",
   "data_version": "v1.0",
   "random_state": 42,
@@ -11,5 +11,5 @@
     "class_1": 24825,
     "ratio": 11.387150050352467
   },
-  "timestamp": "2026-02-11T15:07:54.498226"
+  "timestamp": "2026-02-26T14:56:53.048548"
 }
