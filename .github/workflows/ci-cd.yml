@@ -28,13 +28,13 @@ jobs:
           pytest --cov=api --cov-report=xml --cov-report=term-missing --cov-report=html
 
       - name: Upload coverage to artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: coverage-report
           path: coverage.xml
 
       - name: Upload HTML coverage report
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: htmlcov
           path: htmlcov/
