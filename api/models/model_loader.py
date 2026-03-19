@@ -45,6 +45,9 @@ class ModelLoader:
 
             self.model_name = type(self.model).__name__
 
+            # Fixer les attributs manquants pour sklearn ancien
+            self._fix_sklearn_compatibility()
+
             # Charger les métadonnées si disponibles
             self._load_metadata()
 
@@ -70,6 +73,28 @@ class ModelLoader:
         except Exception as e:
             print(f"Error loading model from file: {str(e)}")
             return False
+
+    def _fix_sklearn_compatibility(self):
+        """Fixer les attributs manquants pour compatibilité sklearn"""
+        try:
+            from sklearn.linear_model import LogisticRegression
+
+            if isinstance(self.model, LogisticRegression):
+                # Ajouter les attributs manquants si nécessaire
+                if not hasattr(self.model, 'multi_class'):
+                    self.model.multi_class = 'auto'
+                    print("Fixed: Added missing 'multi_class' attribute")
+
+                if not hasattr(self.model, 'solver'):
+                    self.model.solver = 'lbfgs'
+                    print("Fixed: Added missing 'solver' attribute")
+
+                if not hasattr(self.model, 'max_iter'):
+                    self.model.max_iter = 100
+                    print("Fixed: Added missing 'max_iter' attribute")
+
+        except Exception as e:
+            print(f"Warning: Could not fix sklearn compatibility: {e}")
 
     def _find_latest_model(self) -> Optional[str]:
         try:
@@ -124,9 +149,9 @@ class ModelLoader:
             # Pour sklearn, essayer d'obtenir les feature_names
             if hasattr(self.model, 'feature_names_in_'):
                 self.feature_names = list(self.model.feature_names_in_)
-                print(f"✅ Feature names extracted: {len(self.feature_names)} features")
+                print(f"Feature names extracted: {len(self.feature_names)} features")
             else:
-                print("⚠️  Model does not have feature_names_in_ attribute")
+                print("Model does not have feature_names_in_ attribute")
                 # Si pas de noms, on ne peut pas valider
                 self.feature_names = None
         except Exception as e:
@@ -163,17 +188,34 @@ class ModelLoader:
             # Préparer les features pour correspondre au modèle
             prepared_features = self._prepare_features(features)
 
-            # Convertir en DataFrame
-            df = pd.DataFrame([prepared_features])
-
-            # Prédiction
-            if hasattr(self.model, "predict_proba"):
-                # Classification avec probabilités
-                proba = self.model.predict_proba(df)
-                prediction_score = float(proba[0][1])  # Probabilité de la classe 1
+            # Convertir en numpy array dans l'ordre des features attendues
+            if self.feature_names:
+                # Utiliser l'ordre des features du modèle
+                feature_values = [prepared_features[name] for name in self.feature_names]
+                X = np.array([feature_values])
             else:
-                # Régression ou autre
-                prediction_score = float(self.model.predict(df)[0])
+                # Fallback: utiliser DataFrame
+                df = pd.DataFrame([prepared_features])
+                X = df.values
+
+            # Prédiction avec gestion robuste des erreurs
+            try:
+                if hasattr(self.model, "predict_proba"):
+                    # Classification avec probabilités
+                    proba = self.model.predict_proba(X)
+                    prediction_score = float(proba[0][1])  # Probabilité de la classe 1
+                else:
+                    # Régression ou autre
+                    prediction_score = float(self.model.predict(X)[0])
+            except AttributeError as ae:
+                # Si erreur d'attribut, essayer avec DataFrame
+                print(f"Warning: AttributeError with numpy array, trying DataFrame: {ae}")
+                df = pd.DataFrame([prepared_features])
+                if hasattr(self.model, "predict_proba"):
+                    proba = self.model.predict_proba(df)
+                    prediction_score = float(proba[0][1])
+                else:
+                    prediction_score = float(self.model.predict(df)[0])
 
             return {
                 "prediction_score": prediction_score,
