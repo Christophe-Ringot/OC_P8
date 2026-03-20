@@ -1,3 +1,6 @@
+"""
+Script de test de l'API
+"""
 import requests
 import json
 import time
@@ -6,6 +9,8 @@ API_URL = "http://localhost:8000"
 
 
 def test_health_check():
+    """Test du endpoint health"""
+    print("\n🔍 Testing health check...")
     response = requests.get(f"{API_URL}/health")
     print(f"Status: {response.status_code}")
     print(json.dumps(response.json(), indent=2))
@@ -13,6 +18,9 @@ def test_health_check():
 
 
 def test_prediction():
+    """Test du endpoint de prédiction"""
+    print("\n🔍 Testing prediction...")
+
     # Données de test (exemple de features)
     test_data = {
         "features": {
@@ -38,14 +46,16 @@ def test_prediction():
     if response.status_code == 200:
         result = response.json()
         print(json.dumps(result, indent=2))
-        print(f"\nPrediction: {result['prediction_class']} (score: {result['prediction_score']:.4f})")
+        print(f"\n✅ Prediction: {result['prediction_class']} (score: {result['prediction_score']:.4f})")
         return True
     else:
-        print(f"Error: {response.text}")
+        print(f"❌ Error: {response.text}")
         return False
 
 
 def test_stats():
+    """Test du endpoint de stats"""
+    print("\n🔍 Testing stats...")
     response = requests.get(f"{API_URL}/api/v1/stats")
     print(f"Status: {response.status_code}")
     print(json.dumps(response.json(), indent=2))
@@ -53,6 +63,8 @@ def test_stats():
 
 
 def test_drift_summary():
+    """Test du endpoint de drift summary"""
+    print("\n🔍 Testing drift summary...")
     response = requests.get(f"{API_URL}/api/v1/monitoring/drift/summary")
     print(f"Status: {response.status_code}")
     print(json.dumps(response.json(), indent=2))
@@ -60,6 +72,8 @@ def test_drift_summary():
 
 
 def run_multiple_predictions(n=10):
+    """Lance plusieurs prédictions pour tester le monitoring"""
+    print(f"\n🔄 Running {n} predictions...")
 
     test_features = [
         {
@@ -80,16 +94,25 @@ def run_multiple_predictions(n=10):
         )
         if response.status_code == 200:
             success_count += 1
-            print(f"Prediction {i+1}/{n} success")
+            print(f"✅ Prediction {i+1}/{n} success")
         else:
-            print(f"Prediction {i+1}/{n} failed")
+            print(f"❌ Prediction {i+1}/{n} failed")
         time.sleep(0.1)
 
-    print(f"\nResults: {success_count}/{n} successful predictions")
+    print(f"\n📊 Results: {success_count}/{n} successful predictions")
     return success_count == n
 
 
 if __name__ == "__main__":
+    print("=" * 60)
+    print("🧪 Testing Credit Risk API")
+    print("=" * 60)
+
+    # Test health check
+    if not test_health_check():
+        print("\n❌ Health check failed - is the API running?")
+        print("💡 Start the API with: python start_api.py")
+        exit(1)
 
     # Test prediction
     test_prediction()
@@ -102,3 +125,9 @@ if __name__ == "__main__":
 
     # Test drift summary
     test_drift_summary()
+
+    print("\n" + "=" * 60)
+    print("✅ All tests completed!")
+    print("=" * 60)
+    print("\n📊 Check the dashboard at: http://localhost:8501")
+    print("📚 Check the API docs at: http://localhost:8000/docs")

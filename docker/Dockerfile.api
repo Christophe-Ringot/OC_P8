@@ -6,8 +6,8 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY api/ ./api/
-COPY start_api.py .
+COPY src/ ./src/
+COPY scripts/deployment/start_api.py .
 COPY run_metadata.json .
 
 RUN mkdir -p mlruns reports data

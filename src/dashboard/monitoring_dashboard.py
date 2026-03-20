@@ -281,7 +281,7 @@ st.markdown("*Dashboard mis à jour automatiquement toutes les 60 secondes*")
 if __name__ == "__main__":
     subprocess.run([
         sys.executable, "-m", "streamlit", "run",
-        "dashboard/monitoring_dashboard.py",
+        __file__,
         "--server.port", "8501",
         "--server.address", "0.0.0.0"
     ])

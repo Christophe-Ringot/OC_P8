@@ -6,8 +6,8 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY dashboard/ ./dashboard/
-COPY start_dashboard.py .
+COPY src/dashboard/ ./src/dashboard/
+COPY scripts/deployment/start_dashboard.py .
 
 EXPOSE 8501
 
