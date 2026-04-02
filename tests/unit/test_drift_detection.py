@@ -131,34 +131,21 @@ class TestDriftDetector:
             assert 'drift_indicators' in summary
 
     def test_detect_drift_no_reference_data(self, detector, sample_production_data):
-        # Si Evidently n'est pas disponible, ça retourne un dict avec error
-        result = detector.detect_drift(sample_production_data)
-        # Soit une ValueError, soit un dict avec erreur
-        if isinstance(result, dict):
-            assert 'error' in result or result is None
-        else:
-            pytest.fail("Should handle missing reference data")
+        with pytest.raises(ValueError, match="Reference data not loaded"):
+            detector.detect_drift(sample_production_data)
 
     def test_detect_drift_empty_production_data(self, detector, sample_reference_data):
         detector.reference_data = sample_reference_data
 
-        # Si Evidently n'est pas disponible, ça retourne un dict avec error
-        result = detector.detect_drift(pd.DataFrame())
-        if isinstance(result, dict):
-            assert 'error' in result
-        else:
-            pytest.fail("Should handle empty production data")
+        with pytest.raises(ValueError, match="Production data is empty"):
+            detector.detect_drift(pd.DataFrame())
 
     def test_detect_drift_no_common_columns(self, detector):
         detector.reference_data = pd.DataFrame({'col1': [1, 2, 3]})
         production_data = pd.DataFrame({'col2': [4, 5, 6]})
 
-        # Si Evidently n'est pas disponible, ça retourne un dict avec error
-        result = detector.detect_drift(production_data)
-        if isinstance(result, dict):
-            assert 'error' in result
-        else:
-            pytest.fail("Should handle no common columns")
+        with pytest.raises(ValueError, match="No common columns"):
+            detector.detect_drift(production_data)
 
     @patch('src.api.monitoring.drift_detection.EVIDENTLY_AVAILABLE', True)
     @patch('src.api.monitoring.drift_detection.DataDriftPreset')

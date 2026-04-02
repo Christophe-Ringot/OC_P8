@@ -202,7 +202,7 @@ class TestMonitoringEndpoints:
         assert "status" in data
 
     def test_drift_report_generation(self, client):
-        with patch('src.api.monitoring.drift_detection.drift_detector') as mock:
+        with patch('src.api.routers.monitoring.drift_detector') as mock:
             mock.generate_drift_report_from_logs.return_value = {
                 "dataset_drift": False,
                 "n_drifted_features": 0
