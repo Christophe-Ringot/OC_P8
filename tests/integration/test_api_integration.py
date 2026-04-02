@@ -1,6 +1,7 @@
 """
 Script de test de l'API
 """
+import pytest
 import requests
 import json
 import time
@@ -8,6 +9,7 @@ import time
 API_URL = "http://localhost:8000"
 
 
+@pytest.mark.integration
 def test_health_check():
     """Test du endpoint health"""
     print("\n🔍 Testing health check...")
@@ -17,6 +19,7 @@ def test_health_check():
     return response.status_code == 200
 
 
+@pytest.mark.integration
 def test_prediction():
     """Test du endpoint de prédiction"""
     print("\n🔍 Testing prediction...")
@@ -53,6 +56,7 @@ def test_prediction():
         return False
 
 
+@pytest.mark.integration
 def test_stats():
     """Test du endpoint de stats"""
     print("\n🔍 Testing stats...")
@@ -62,6 +66,7 @@ def test_stats():
     return response.status_code == 200
 
 
+@pytest.mark.integration
 def test_drift_summary():
     """Test du endpoint de drift summary"""
     print("\n🔍 Testing drift summary...")
