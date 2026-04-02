@@ -7,7 +7,7 @@ import pandas as pd
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from api.models.model_loader import ModelLoader
+from src.api.models.model_loader import ModelLoader
 
 
 class TestModelLoader:

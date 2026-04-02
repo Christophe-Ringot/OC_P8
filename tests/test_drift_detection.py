@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch, MagicMock
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from api.monitoring.drift_detection import DriftDetector
+from src.api.monitoring.drift_detection import DriftDetector
 
 
 class TestDriftDetector:
@@ -164,10 +164,10 @@ class TestDriftDetector:
         else:
             pytest.fail("Should handle no common columns")
 
-    @patch('api.monitoring.drift_detection.EVIDENTLY_AVAILABLE', True)
-    @patch('api.monitoring.drift_detection.DataDriftPreset')
-    @patch('api.monitoring.drift_detection.DataQualityPreset')
-    @patch('api.monitoring.drift_detection.Report')
+    @patch('src.api.monitoring.drift_detection.EVIDENTLY_AVAILABLE', True)
+    @patch('src.api.monitoring.drift_detection.DataDriftPreset')
+    @patch('src.api.monitoring.drift_detection.DataQualityPreset')
+    @patch('src.api.monitoring.drift_detection.Report')
     def test_detect_drift_success(self, MockReport, MockDataQuality, MockDataDrift, detector, sample_reference_data, sample_production_data, tmp_path):
         detector.reference_data = sample_reference_data
 
@@ -196,7 +196,7 @@ class TestDriftDetector:
         assert result['dataset_drift'] is False
         assert result['n_drifted_features'] == 0
 
-    @patch('api.monitoring.drift_detection.EVIDENTLY_AVAILABLE', False)
+    @patch('src.api.monitoring.drift_detection.EVIDENTLY_AVAILABLE', False)
     def test_detect_drift_evidently_not_available(self, detector, sample_reference_data, sample_production_data):
         detector.reference_data = sample_reference_data
 

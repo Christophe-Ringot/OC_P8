@@ -6,8 +6,8 @@ import os
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from api.main import app
-from api.models.model_loader import ModelLoader
+from src.api.main import app
+from src.api.models.model_loader import ModelLoader
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def client():
 
 @pytest.fixture(autouse=True)
 def mock_model_loader():
-    with patch('api.models.model_loader.model_loader') as mock:
+    with patch('src.api.models.model_loader.model_loader') as mock:
         mock.is_loaded.return_value = True
         mock.model_version = "test_v1.0"
         mock.model_name = "TestModel"
@@ -67,7 +67,7 @@ class TestHealthEndpoint:
         assert data["api_version"] == "1.0.0"
 
     def test_health_check_model_not_loaded(self, client):
-        with patch('api.models.model_loader.model_loader') as mock:
+        with patch('src.api.models.model_loader.model_loader') as mock:
             mock.is_loaded.return_value = False
             mock.get_model_info.return_value = {"model_version": None}
 
@@ -106,7 +106,7 @@ class TestPredictionEndpoint:
         assert response.status_code == 422 
 
     def test_predict_model_not_loaded(self, client):
-        with patch('api.models.model_loader.model_loader') as mock:
+        with patch('src.api.models.model_loader.model_loader') as mock:
             mock.is_loaded.return_value = False
 
             test_data = {
@@ -119,7 +119,7 @@ class TestPredictionEndpoint:
             assert response.status_code == 503
 
     def test_predict_model_error(self, client):
-        with patch('api.models.model_loader.model_loader') as mock:
+        with patch('src.api.models.model_loader.model_loader') as mock:
             mock.is_loaded.return_value = True
             mock.predict.side_effect = Exception("Prediction error")
 
@@ -133,7 +133,7 @@ class TestPredictionEndpoint:
             assert response.status_code in [500, 503]
 
     def test_predict_threshold_logic(self, client):
-        with patch('api.models.model_loader.model_loader') as mock:
+        with patch('src.api.models.model_loader.model_loader') as mock:
             mock.is_loaded.return_value = True
             mock.model_version = "test_v1.0"
 
@@ -189,7 +189,7 @@ class TestModelFeaturesEndpoint:
         assert "features" in data or "message" in data
 
     def test_get_model_features_not_available(self, client):
-        with patch('api.models.model_loader.model_loader') as mock:
+        with patch('src.api.models.model_loader.model_loader') as mock:
             mock.get_expected_features.return_value = None
 
             response = client.get("/api/v1/model/features")
@@ -206,7 +206,7 @@ class TestMonitoringEndpoints:
         assert "status" in data
 
     def test_drift_report_generation(self, client):
-        with patch('api.monitoring.drift_detection.drift_detector') as mock:
+        with patch('src.api.monitoring.drift_detection.drift_detector') as mock:
             mock.generate_drift_report_from_logs.return_value = {
                 "dataset_drift": False,
                 "n_drifted_features": 0
@@ -250,7 +250,7 @@ class TestPredictionLogging:
 
 class TestMonitoringEndpointsExtended:
     def test_set_reference_data_success(self, client):
-        with patch('api.monitoring.drift_detection.drift_detector.load_reference_data'):
+        with patch('src.api.monitoring.drift_detection.drift_detector.load_reference_data'):
             response = client.post(
                 "/api/v1/monitoring/drift/set-reference",
                 params={"data_path": "data/test.csv"}
@@ -258,7 +258,7 @@ class TestMonitoringEndpointsExtended:
             assert response.status_code == 200
 
     def test_set_reference_data_error(self, client):
-        with patch('api.monitoring.drift_detection.drift_detector.load_reference_data', side_effect=Exception("File not found")):
+        with patch('src.api.monitoring.drift_detection.drift_detector.load_reference_data', side_effect=Exception("File not found")):
             response = client.post(
                 "/api/v1/monitoring/drift/set-reference",
                 params={"data_path": "bad_path.csv"}
@@ -266,11 +266,11 @@ class TestMonitoringEndpointsExtended:
             assert response.status_code == 500
 
     def test_drift_summary_error(self, client):
-        with patch('api.monitoring.drift_detection.drift_detector.get_drift_summary', side_effect=Exception("Drift error")):
+        with patch('src.api.monitoring.drift_detection.drift_detector.get_drift_summary', side_effect=Exception("Drift error")):
             response = client.get("/api/v1/monitoring/drift/summary")
             assert response.status_code == 500
 
     def test_drift_report_error(self, client):
-        with patch('api.monitoring.drift_detection.drift_detector.generate_drift_report_from_logs', side_effect=Exception("Report error")):
+        with patch('src.api.monitoring.drift_detection.drift_detector.generate_drift_report_from_logs', side_effect=Exception("Report error")):
             response = client.post("/api/v1/monitoring/drift/report")
             assert response.status_code == 500
