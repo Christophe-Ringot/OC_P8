@@ -1,0 +1,47 @@
+{
+  "timestamp": "2026-04-09T10:11:02.427585",
+  "n_reference_samples": 10000,
+  "n_production_samples": 10000,
+  "n_features_analyzed": 9,
+  "n_drifted_features": 2,
+  "drift_threshold_pct": 10,
+  "drifted_features": {
+    "AMT_GOODS_PRICE": 14.39591092545407,
+    "AMT_CREDIT": 14.090305994824872
+  },
+  "all_drift_indicators": {
+    "mean_drift_pct": {
+      "AMT_GOODS_PRICE": 14.39591092545407,
+      "AMT_CREDIT": 14.090305994824872,
+      "AMT_ANNUITY": 8.325179001705171,
+      "DAYS_EMPLOYED": 7.057936800434588,
+      "EXT_SOURCE_3": 2.266261418078074,
+      "AMT_INCOME_TOTAL": 0.736741658634839,
+      "EXT_SOURCE_1": 0.49802956797610104,
+      "DAYS_BIRTH": 0.23617391184056713,
+      "EXT_SOURCE_2": 0.08902305300767255
+    },
+    "std_drift_pct": {
+      "AMT_GOODS_PRICE": 9.908536162381363,
+      "AMT_CREDIT": 10.68250484532061,
+      "AMT_ANNUITY": 9.415206484199562,
+      "DAYS_EMPLOYED": 2.642322441283077,
+      "EXT_SOURCE_3": 3.8210140446578555,
+      "AMT_INCOME_TOTAL": 91.39096470248347,
+      "EXT_SOURCE_1": 2.466683921524895,
+      "DAYS_BIRTH": 2.5527057968944975,
+      "EXT_SOURCE_2": 4.589582116633705
+    },
+    "drift_detected": {
+      "AMT_GOODS_PRICE": true,
+      "AMT_CREDIT": true,
+      "AMT_ANNUITY": false,
+      "DAYS_EMPLOYED": false,
+      "EXT_SOURCE_3": false,
+      "AMT_INCOME_TOTAL": false,
+      "EXT_SOURCE_1": false,
+      "DAYS_BIRTH": false,
+      "EXT_SOURCE_2": false
+    }
+  }
+}
