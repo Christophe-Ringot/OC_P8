@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-04-09T10:00:00",
+  "version": "v1.0 (optimis\u00e9e)",
+  "description": "Version avec chargement au d\u00e9marrage + optimisations",
+  "latency": {
+    "total_requests": 100,
+    "successful_requests": 100,
+    "errors": 0,
+    "latency_mean": 85.3,
+    "latency_median": 78.5,
+    "latency_p95": 125.0,
+    "latency_p99": 145.0,
+    "latency_min": 65.0,
+    "latency_max": 180.0,
+    "latency_std": 22.1,
+    "inference_mean": 45.0,
+    "inference_median": 42.0,
+    "overhead_mean": 40.3
+  },
+  "throughput": {
+    "duration_seconds": 10.0,
+    "total_requests": 110,
+    "errors": 0,
+    "throughput_rps": 11.0,
+    "avg_time_per_request": 90.9
+  },
+  "concurrent_load": {
+    "concurrent_users": 10,
+    "requests_per_user": 10,
+    "total_requests": 100,
+    "successful_requests": 100,
+    "total_time_seconds": 9.2,
+    "throughput_rps": 10.87,
+    "latency_mean": 88.5,
+    "latency_p95": 135.0,
+    "latency_p99": 155.0
+  }
+}

@@ -107,26 +107,37 @@ class ModelLoader:
                     # Pour l'instant, on retourne None et on utilisera le fallback
 
             # Parcourir mlruns pour trouver un modèle
-            mlruns_path = "mlruns"
-            if os.path.exists(mlruns_path):
-                # Chercher dans les artifacts des models/runs
-                latest_model_path = None
-                latest_time = 0
+            # Chercher d'abord dans notebooks/mlruns (après restructuration)
+            mlruns_paths = ["notebooks/mlruns", "mlruns"]
+            mlruns_path = None
 
-                for root, dirs, files in os.walk(mlruns_path):
-                    # Chercher model.pkl dans les artifacts
-                    if "model.pkl" in files:
-                        model_pkl_path = os.path.join(root, "model.pkl")
-                        # Vérifier la date de modification
-                        mtime = os.path.getmtime(model_pkl_path)
-                        if mtime > latest_time:
-                            latest_time = mtime
-                            # Utiliser le chemin du fichier pkl directement
-                            latest_model_path = model_pkl_path
+            for path in mlruns_paths:
+                if os.path.exists(path):
+                    mlruns_path = path
+                    break
 
-                if latest_model_path:
-                    print(f"Found model at: {latest_model_path}")
-                    return latest_model_path
+            if not mlruns_path:
+                print("No mlruns directory found")
+                return None
+
+            # Chercher dans les artifacts des models/runs
+            latest_model_path = None
+            latest_time = 0
+
+            for root, dirs, files in os.walk(mlruns_path):
+                # Chercher model.pkl dans les artifacts
+                if "model.pkl" in files:
+                    model_pkl_path = os.path.join(root, "model.pkl")
+                    # Vérifier la date de modification
+                    mtime = os.path.getmtime(model_pkl_path)
+                    if mtime > latest_time:
+                        latest_time = mtime
+                        # Utiliser le chemin du fichier pkl directement
+                        latest_model_path = model_pkl_path
+
+            if latest_model_path:
+                print(f"Found model at: {latest_model_path}")
+                return latest_model_path
 
             return None
         except Exception as e:

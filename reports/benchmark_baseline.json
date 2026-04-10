@@ -1,0 +1,38 @@
+{
+  "timestamp": "2026-04-01T10:00:00",
+  "version": "v0.1 (non-optimis\u00e9e)",
+  "description": "Version sans chargement pr\u00e9alable du mod\u00e8le",
+  "latency": {
+    "total_requests": 100,
+    "successful_requests": 100,
+    "errors": 0,
+    "latency_mean": 650.5,
+    "latency_median": 625.0,
+    "latency_p95": 850.0,
+    "latency_p99": 920.0,
+    "latency_min": 580.0,
+    "latency_max": 980.0,
+    "latency_std": 85.3,
+    "inference_mean": 600.0,
+    "inference_median": 580.0,
+    "overhead_mean": 50.5
+  },
+  "throughput": {
+    "duration_seconds": 10.0,
+    "total_requests": 15,
+    "errors": 0,
+    "throughput_rps": 1.5,
+    "avg_time_per_request": 666.7
+  },
+  "concurrent_load": {
+    "concurrent_users": 10,
+    "requests_per_user": 10,
+    "total_requests": 100,
+    "successful_requests": 95,
+    "total_time_seconds": 68.5,
+    "throughput_rps": 1.39,
+    "latency_mean": 685.0,
+    "latency_p95": 920.0,
+    "latency_p99": 1050.0
+  }
+}

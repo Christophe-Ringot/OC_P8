@@ -9,8 +9,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY src/ ./src/
 COPY scripts/deployment/start_api.py .
 COPY run_metadata.json .
+COPY data/reference/reference_data.csv ./data/reference/
 
-RUN mkdir -p mlruns reports data
+RUN mkdir -p notebooks/mlruns reports data
 
 EXPOSE 8000
 

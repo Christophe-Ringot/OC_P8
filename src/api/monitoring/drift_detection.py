@@ -253,7 +253,7 @@ class DriftDetector:
                     "ref_std": float(ref_std),
                     "prod_std": float(prod_std),
                     "mean_drift_pct": float(mean_drift_pct),
-                    "drift_detected": drift_detected
+                    "drift_detected": bool(drift_detected)  # Convertir numpy.bool en bool Python
                 }
             except Exception as e:
                 print(f"Error comparing column {col}: {str(e)}")
@@ -261,4 +261,16 @@ class DriftDetector:
 
         return indicators
 
-drift_detector = DriftDetector()
+# Initialiser avec les données de référence si disponibles
+_reference_paths = [
+    "data/reference/reference_data.csv",
+    "data/dataset_final.csv"  # Fallback sur le dataset complet
+]
+
+_reference_path = None
+for path in _reference_paths:
+    if os.path.exists(path):
+        _reference_path = path
+        break
+
+drift_detector = DriftDetector(reference_data_path=_reference_path)

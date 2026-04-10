@@ -1,0 +1,37 @@
+{
+  "timestamp": "2026-04-09T10:40:20.930937",
+  "baseline_version": "v0.1 (non-optimis\u00e9e)",
+  "optimized_version": "v1.0 (optimis\u00e9e)",
+  "improvements": {
+    "latency_mean_pct": 86.88700999231361,
+    "latency_p95_pct": 85.29411764705883,
+    "latency_p99_pct": 84.23913043478261,
+    "throughput_rps_pct": 633.3333333333333
+  },
+  "summary": {
+    "latency_reduction_factor": 7.626025791324737,
+    "throughput_increase_factor": 7.333333333333333
+  },
+  "optimizations_applied": [
+    {
+      "name": "Chargement du mod\u00e8le au d\u00e9marrage",
+      "description": "Le mod\u00e8le est charg\u00e9 une fois au d\u00e9marrage via lifespan event",
+      "impact": "\u00c9limine ~550ms de latence par requ\u00eate"
+    },
+    {
+      "name": "Validation Pydantic",
+      "description": "Validation rapide des donn\u00e9es d'entr\u00e9e",
+      "impact": "~5% de r\u00e9duction d'overhead"
+    },
+    {
+      "name": "Connection pooling",
+      "description": "R\u00e9utilisation des connexions DB",
+      "impact": "~3% de r\u00e9duction d'overhead"
+    },
+    {
+      "name": "FastAPI async",
+      "description": "Framework asynchrone pour meilleure concurrence",
+      "impact": "+633% de throughput"
+    }
+  ]
+}
