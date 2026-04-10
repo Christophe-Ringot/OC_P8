@@ -1,8 +1,3 @@
-"""
-Script de profiling pour analyser les performances de l'API
-Utilise cProfile pour identifier les goulots d'étranglement
-"""
-
 import cProfile
 import pstats
 import io
@@ -13,18 +8,9 @@ import json
 
 
 def profile_api_endpoint(url: str, data: dict, num_requests: int = 100):
-    """
-    Profile un endpoint de l'API
-
-    Args:
-        url: URL de l'endpoint
-        data: Données à envoyer
-        num_requests: Nombre de requêtes à effectuer
-    """
-    print(f"\n🔍 Profiling {url} avec {num_requests} requêtes...")
+    print(f"\nProfiling {url} avec {num_requests} requêtes...")
 
     def make_requests():
-        """Fonction à profiler"""
         response_times = []
         for i in range(num_requests):
             start = time.time()
@@ -55,7 +41,7 @@ def profile_api_endpoint(url: str, data: dict, num_requests: int = 100):
 
     # Statistiques des temps de réponse
     if response_times:
-        print(f"\n📊 Statistiques des temps de réponse:")
+        print(f"Statistiques des temps de réponse:")
         print(f"  - Moyenne: {sum(response_times)/len(response_times):.2f} ms")
         print(f"  - Minimum: {min(response_times):.2f} ms")
         print(f"  - Maximum: {max(response_times):.2f} ms")
@@ -67,30 +53,23 @@ def profile_api_endpoint(url: str, data: dict, num_requests: int = 100):
         ps = pstats.Stats(profiler, stream=f).sort_stats(sortby)
         ps.print_stats()
 
-    print(f"\n✅ Résultats sauvegardés dans profiling_results.txt")
-
     return response_times
 
 
 def profile_prediction_workflow():
-    """
-    Profile le workflow complet de prédiction
-    Identifie les goulots d'étranglement dans le code
-    """
-    print("\n🔬 Profiling du workflow de prédiction...")
+    print("Profiling du workflow de prédiction...")
 
     # Simuler le workflow sans API (profiling du code interne)
     from api.models.model_loader import ModelLoader
     from api.models.schemas import PredictionRequest
 
     def simulation_predictions(n: int = 1000):
-        """Simuler n prédictions"""
         loader = ModelLoader()
 
         # Charger le modèle
         loaded = loader.load_model_from_mlflow()
         if not loaded:
-            print("❌ Modèle non chargé, simulation impossible")
+            print("Modèle non chargé, simulation impossible")
             return
 
         # Faire des prédictions
@@ -124,34 +103,29 @@ def profile_prediction_workflow():
         ps = pstats.Stats(profiler, stream=f).sort_stats(SortKey.CUMULATIVE)
         ps.print_stats()
 
-    print(f"\n✅ Résultats sauvegardés dans profiling_model_predictions.txt")
-
 
 def analyze_bottlenecks():
-    """
-    Analyse les résultats de profiling pour identifier les goulots
-    """
-    print("\n🔍 Analyse des goulots d'étranglement...")
+    print("Analyse des goulots d'étranglement...")
 
     try:
         with open('profiling_results.txt', 'r') as f:
             content = f.read()
 
         # Identifier les fonctions qui prennent le plus de temps
-        print("\n⚠️ Fonctions les plus coûteuses (> 1% du temps total):")
+        print("Fonctions les plus coûteuses (> 1% du temps total):")
         lines = content.split('\n')
         for line in lines[6:26]:  # Lignes avec les stats
             if line.strip() and not line.startswith('---'):
                 print(f"  {line}")
 
-        print("\n💡 Recommandations d'optimisation:")
+        print("Recommandations d'optimisation:")
         print("  1. Identifier les fonctions avec temps cumulé élevé")
         print("  2. Vérifier les appels répétitifs (ncalls)")
         print("  3. Optimiser les fonctions avec tottime élevé")
         print("  4. Envisager la mise en cache pour les calculs répétitifs")
 
     except FileNotFoundError:
-        print("❌ Fichier profiling_results.txt non trouvé")
+        print("Fichier profiling_results.txt non trouvé")
 
 
 if __name__ == "__main__":
@@ -167,10 +141,6 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    print("=" * 70)
-    print("🔬 PROFILING DE L'API MLOPS")
-    print("=" * 70)
-
     sample_data = {
         "features": {
             "AMT_INCOME_TOTAL": 202500.0,
@@ -183,18 +153,14 @@ if __name__ == "__main__":
         try:
             profile_api_endpoint(args.api_url, sample_data, args.num_requests)
         except Exception as e:
-            print(f"⚠️ Profiling API impossible: {e}")
+            print(f"Profiling API impossible: {e}")
             print("   (Assurez-vous que l'API est lancée)")
 
     if args.mode in ["model", "all"]:
         try:
             profile_prediction_workflow()
         except Exception as e:
-            print(f"⚠️ Profiling modèle impossible: {e}")
+            print(f"Profiling modèle impossible: {e}")
 
     if args.mode in ["analyze", "all"]:
         analyze_bottlenecks()
-
-    print("\n" + "=" * 70)
-    print("✅ Profiling terminé!")
-    print("=" * 70)
